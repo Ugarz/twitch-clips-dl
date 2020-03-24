@@ -13,41 +13,38 @@ const auth = async () => {
     }
 
     const res = await axios.post(url, qs.stringify(authParams));
-    console.log('AuthInfos', res.data)
-    axios.defaults.headers.common = { 'authorization': `${res.data.token_type} ${res.data.access_token}` }
-    console.log(axios.defaults.headers)
+    
     return res.data;
   } catch (error) {
     console.log('Error while authentication', error)
   }
 }
 
-const getUser = async (token) => {
+const getUser = async (token, userNickName) => {
   try {
-    const url = 'https://api.twitch.tv/helix/users?login=carbow'
+    const url = 'https://api.twitch.tv/helix/users'
+
     const config = {
-      headers: {
-        "authorization": `Bearer ${token}`
-      }
+      params: { login: userNickName || 'carbow' },
+      headers: { "authorization": `Bearer ${token}` }
     }
-    const res = await axios.post(url, {}, config);
-    return res.data;
+
+    const res = await axios.get(url, config);
+    
+    return res.data.data[0];
   } catch (error) {
     console.log('Error data', error.response.data)
   }
 }
 
 
-const init = async () => {
+const authenticate = async () => {
   try {
     
     const authInfos = await auth()
-    console.log('Init authInfos', authInfos)
-
     const userInfos = await getUser(authInfos.access_token)
-    console.log('Init userInfos', userInfos)
 
-    return {authInfos, userInfos};
+    return { authInfos, userInfos };
   } catch (error) {
     console.log('\nError request headers', error.response.config)
     console.log('Error data', error.response.data)
@@ -56,19 +53,18 @@ const init = async () => {
 
 
 
-function getAllClips(broadcaster_id, authInfos) {
-  console.log('Get clips for', broadcaster_id)
-  return axios
-    .post('https://api.twitch.tv/helix/clips', qs.stringify({ 'broadcaster_id': broadcaster_id }),
-      { headers: `${authInfos.token_type} ${authInfos.access_token}`})    .then(result => {
-      console.log(result)
-      return result
-    })
-    .catch(e => console.log(e))
+const getAllClips = async (authInfos, broadcaster_id) => {
+  console.log('Get clips for', authInfos, broadcaster_id)
+  const config = {
+    params: { broadcaster_id },
+    headers: { "authorization": `Bearer ${authInfos.access_token}` }
+  }
+  const clips = await axios.get('https://api.twitch.tv/helix/clips', config)
+  return clips.data.data;
 }
 
 
 module.exports = {
-  authenticate: init,
+  authenticate,
   getAllClips
 }
