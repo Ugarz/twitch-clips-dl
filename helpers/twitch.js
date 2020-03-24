@@ -2,6 +2,9 @@ const dotenv = require('dotenv').config()
 const axios = require('axios')
 const qs = require('qs');
 
+/**
+ * Twitch Authentication
+ */
 const auth = async () => {
   try {
     const url = 'https://id.twitch.tv/oauth2/token'
@@ -20,6 +23,11 @@ const auth = async () => {
   }
 }
 
+/**
+ * Get User's informations
+ * @param {String} token Twitch api access_token
+ * @param {String} userNickName The broadcaster's Name
+ */
 const getUser = async (token, userNickName) => {
   try {
     const url = 'https://api.twitch.tv/helix/users'
@@ -37,7 +45,9 @@ const getUser = async (token, userNickName) => {
   }
 }
 
-
+/**
+ * Authentication and fetch user's informations
+ */
 const authenticate = async () => {
   try {
     
@@ -52,7 +62,11 @@ const authenticate = async () => {
 }
 
 
-
+/**
+ * Fetch clips for a broadcaster
+ * @param {Object} authInfos Authentication informations
+ * @param {String} broadcaster_id Broadcaster identifier
+ */
 const getAllClips = async (authInfos, broadcaster_id) => {
   console.log('Get clips for', authInfos, broadcaster_id)
   const config = {
