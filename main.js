@@ -5,7 +5,7 @@ helpers.authenticate()
     console.log('\nFIN', authInfos, userInfos)
     helpers.getAllClips(authInfos, userInfos.id)
       .then(clips => {
-        console.log('The clips', clips)
+        console.log(`Il y a ${clips.length} clips`)
         clips.forEach(clip => {
           // TODO: use puppeteer to fetch url in DOM
           // TODO: dl clips in folder
