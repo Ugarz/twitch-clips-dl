@@ -7,15 +7,17 @@
     "axios": "^0.19.2",
     "dotenv": "^8.2.0",
     "puppeteer": "^2.1.1",
-    "qs": "^6.9.2"
+    "qs": "^6.9.2",
+    "rxjs": "^7.1.0"
   },
   "devDependencies": {
     "axios-debug-log": "^0.8.2",
     "nodemon": "^2.0.2"
   },
   "scripts": {
-    "start": "node main.js",
-    "dev": "./node_modules/.bin/nodemon main.js"
+    "start": "DEBUG=axios node main.js",
+    "dev": "./node_modules/.bin/nodemon main.js",
+    "clean": "rm clips/*"
   },
   "keywords": [],
   "author": "",
